@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Procurement Knowledge Base — Technical Overview</title>
+<style>
+  :root{
+    --navy:#0b2545; --navy2:#13315c; --teal:#168aad; --teal-d:#13606e;
+    --accent:#2c7da0; --amber:#d98a3d; --bg:#f6f8fa; --ink:#1b2430;
+    --muted:#5b6b7b; --line:#e3e9ef;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    -webkit-print-color-adjust:exact; print-color-adjust:exact;
+    font:15.5px/1.6 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+  .page{max-width:880px;margin:0 auto;padding:32px 28px 56px;}
+  a{color:var(--accent);text-decoration:none}
+  header.hero{background:linear-gradient(135deg,var(--navy),var(--teal));color:#fff;
+    border-radius:14px;padding:26px 30px;margin-bottom:8px;}
+  header.hero .kicker{font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:#bfe6ef}
+  header.hero h1{margin:6px 0 8px;font-size:26px;line-height:1.2}
+  header.hero p{margin:0;color:#eaf6fa;font-size:14.5px;max-width:68ch}
+  header.hero .by{margin-top:15px;padding-top:12px;border-top:1px solid rgba(255,255,255,.25);
+    font-size:13px;color:#dceef4}
+  header.hero .by b{color:#fff;font-size:14px}
+  .thesis{background:#e6f4f1;border:1px solid #b6e3da;border-left:4px solid var(--teal);
+    border-radius:8px;padding:12px 15px;margin:16px 0 4px;font-size:14.5px}
+  .thesis b{color:var(--teal-d)}
+  .reading{background:#fff;border:1px solid var(--line);border-radius:8px;padding:12px 15px;margin:14px 0;font-size:13.5px;color:var(--muted)}
+  .reading b{color:var(--navy)}
+  .reading ol{margin:8px 0 2px;padding-left:20px}
+  .part{margin:36px 0 0;padding:9px 16px;background:var(--navy);color:#fff;border-radius:9px;
+    font-size:12px;letter-spacing:.1em;text-transform:uppercase;font-weight:700}
+  .part span{color:#bfe6ef;margin-right:10px}
+  section{margin-top:24px}
+  h2{color:var(--navy);font-size:19px;margin:0 0 3px;padding-bottom:6px;border-bottom:2px solid var(--teal);display:inline-block}
+  h2 .n{color:var(--teal);font-weight:700;margin-right:8px}
+  h3{color:var(--teal-d);font-size:15px;margin:18px 0 2px}
+  p{margin:10px 0}
+  ul,ol{margin:8px 0;padding-left:20px}
+  li{margin:4px 0}
+  code{background:#eef2f6;color:#0b3d4d;border-radius:4px;padding:1px 5px;font-size:13px;
+    font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace}
+  pre{background:#0e1726;color:#e6edf3;border-radius:8px;padding:13px 15px;overflow-x:auto;
+    font-size:12.5px;line-height:1.5;font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace}
+  pre code{background:none;color:inherit;padding:0}
+  pre .c{color:#8aa0b4}
+  table{border-collapse:collapse;width:100%;margin:12px 0;font-size:13.5px}
+  th,td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+  th{background:#eef3f7;color:var(--navy);font-weight:600}
+  tr:nth-child(even) td{background:#fafcfd}
+  .diagram{margin:14px 0;padding:12px;background:#fff;border:1px solid var(--line);border-radius:10px}
+  .diagram svg{display:block;width:100%;height:auto}
+  .diagram .cap{font-size:12px;color:var(--muted);text-align:center;margin-top:8px;line-height:1.4}
+  .note{font-size:13.5px;color:var(--muted)}
+  .tool{background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:12px 0;
+    border-left:4px solid var(--teal)}
+  .tool.star{border-left-color:var(--amber)}
+  .tool .sig{font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;font-size:13px;color:#0b3d4d;
+    background:#eef2f6;border-radius:5px;padding:5px 8px;display:block;margin-bottom:8px;overflow-x:auto}
+  .tool h3{margin:0 0 4px;color:var(--navy);font-size:14.5px}
+  .tool .row{font-size:13.5px;margin:6px 0}
+  .tool .row b{color:var(--teal-d)}
+  footer{margin-top:34px;padding-top:14px;border-top:1px solid var(--line);font-size:12px;color:var(--muted);text-align:center}
+  @media print{
+    body{background:#fff}
+    .page{max-width:none;padding:0 6mm}
+    table,.diagram,pre,header.hero,.tool{break-inside:avoid}
+    h2,h3{break-after:avoid}
+    .part{break-before:auto}
+    section{margin-top:18px}
+    @page{margin:14mm 12mm}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header class="hero">
+    <div class="kicker">Senior AI Data Software Developer · Take-Home</div>
+    <h1>Procurement Knowledge Base — Pipeline &amp; MCP Server</h1>
+    <p>A local data pipeline and MCP server that let an AI agent retrieve, compare and reason across a heterogeneous procurement knowledge base — invoices, purchase orders, shipping orders, inventory reports and a supply contract — with answers grounded in source references.</p>
+    <div class="by"><b>Miguel Ángel Santana Hernández</b> &nbsp;·&nbsp; Senior AI Data Software Developer &nbsp;·&nbsp; June 2026</div>
+  </header>
+
+  <div class="thesis"><b>The design in one line:</b> the data has two shapes, so retrieval has two shapes. The transactional records (invoices, POs, shipping, inventory) are relational and join on an <code>order_id</code>, so they are answered with deterministic SQL. The single narrative document (the contract) is the only thing embedded for semantic search. The MCP client is the agent; the server is a grounded, auditable tool layer.</div>
+
+  <div class="reading">
+    <b>How to read this document (top-down).</b> It widens from idea to implementation, so you can stop at the depth you need:
+    <ol>
+      <li><b>Part I — The system at a glance:</b> what it is, the architecture, how an agent uses it.</li>
+      <li><b>Part II — The data:</b> what the files actually are, the pipeline, the data model, and the extraction decisions.</li>
+      <li><b>Part III — Retrieval &amp; the MCP surface:</b> retrieval strategy, every tool in detail, cross-document matching, citations.</li>
+      <li><b>Part IV — The repository:</b> folder layout, every dependency and why it was chosen over the alternatives, what was left out on purpose, how to run it, and validation.</li>
+    </ol>
+  </div>
+
+  <!-- ============================ PART I ============================ -->
+  <div class="part"><span>Part I</span>The system at a glance</div>
+
+  <section>
+    <h2><span class="n">1</span>What this is, and the problem it solves</h2>
+    <p>The brief provides a small procurement knowledge base — 45 files across five categories (invoices, purchase orders, shipping orders, inventory reports, contracts) — as a mix of clean PDFs, a long contract, and scanned image invoices. The task is a <b>local</b> pipeline that prepares those files plus an <b>MCP server</b> that lets an AI agent (Claude Desktop, ChatGPT, any MCP client) ask questions over them and answer with citations.</p>
+    <p>The interesting part is not parsing files; it is the architecture. Looking at the example questions, seven of the eight are <b>relational</b> — "which invoices are missing a purchase order", "which documents support order 10687", "are there mismatches between invoice, PO and shipping". Only one is genuinely <b>semantic</b> — "summarize the contract terms relevant to supply of goods". So the obvious move, "embed every document into a vector store", would be the wrong architecture: vector similarity cannot prove a row is <i>absent</i>, and it cannot guarantee an exact lookup. The design follows the data instead.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">2</span>Architecture overview</h2>
+    <p>Three layers, one database, no external services. A <b>pipeline</b> prepares the files into a single SQLite database (relational tables + a keyword index + the contract vectors). A <b>FastMCP server</b> exposes six typed tools over those tables. The <b>MCP client</b> does the reasoning and calls the tools. The whole knowledge base is one ~2&nbsp;MB file and one process — for 45 documents, that is the right amount of machinery.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 900 590" width="100%" role="img" aria-label="Architecture diagram">
+        <defs>
+          <style>text{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}</style>
+          <marker id="arD" markerWidth="10" markerHeight="10" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#168aad"/></marker>
+        </defs>
+        <!-- BAND 1: SOURCES -->
+        <text x="45" y="26" font-size="12" font-weight="700" fill="#13315c">1 · SOURCES — three document shapes</text>
+        <rect x="45" y="36" width="230" height="66" rx="9" fill="#eef6fb" stroke="#168aad" stroke-width="1.5"/>
+        <text x="160" y="58" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0b2545">Northwind PDFs</text>
+        <text x="160" y="74" text-anchor="middle" font-size="9.5" fill="#5b6b7b">invoices · POs · shipping · inventory</text>
+        <text x="160" y="91" text-anchor="middle" font-size="9" font-weight="700" fill="#168aad">structured + semi</text>
+        <rect x="335" y="36" width="230" height="66" rx="9" fill="#eef6fb" stroke="#168aad" stroke-width="1.5"/>
+        <text x="450" y="58" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0b2545">Contract (71 pages)</text>
+        <text x="450" y="74" text-anchor="middle" font-size="9.5" fill="#5b6b7b">narrative legal text</text>
+        <text x="450" y="91" text-anchor="middle" font-size="9" font-weight="700" fill="#168aad">unstructured</text>
+        <rect x="625" y="36" width="230" height="66" rx="9" fill="#fdf3ec" stroke="#d98a3d" stroke-width="1.5"/>
+        <text x="740" y="58" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0b2545">5 image invoices</text>
+        <text x="740" y="74" text-anchor="middle" font-size="9.5" fill="#5b6b7b">scanned · separate schema</text>
+        <text x="740" y="91" text-anchor="middle" font-size="9" font-weight="700" fill="#d98a3d">multi-modal</text>
+        <line x1="160" y1="102" x2="160" y2="136" stroke="#168aad" stroke-width="1.5" marker-end="url(#arD)"/>
+        <line x1="450" y1="102" x2="450" y2="136" stroke="#168aad" stroke-width="1.5" marker-end="url(#arD)"/>
+        <line x1="740" y1="102" x2="740" y2="136" stroke="#d98a3d" stroke-width="1.5" marker-end="url(#arD)"/>
+        <!-- BAND 2: PIPELINE -->
+        <text x="45" y="128" font-size="12" font-weight="700" fill="#13315c">2 · PIPELINE — one extractor per shape</text>
+        <rect x="45" y="138" width="230" height="58" rx="9" fill="#f3f8fb" stroke="#13606e" stroke-width="1.5"/>
+        <text x="160" y="163" text-anchor="middle" font-size="12" font-weight="700" fill="#0b2545">pdfplumber</text>
+        <text x="160" y="180" text-anchor="middle" font-size="9.5" fill="#5b6b7b">deterministic parsers</text>
+        <rect x="335" y="138" width="230" height="58" rx="9" fill="#f3f8fb" stroke="#13606e" stroke-width="1.5"/>
+        <text x="450" y="163" text-anchor="middle" font-size="12" font-weight="700" fill="#0b2545">PyMuPDF (fitz)</text>
+        <text x="450" y="180" text-anchor="middle" font-size="9.5" fill="#5b6b7b">text + highlight colors · no OCR</text>
+        <rect x="625" y="138" width="230" height="58" rx="9" fill="#f3f8fb" stroke="#13606e" stroke-width="1.5"/>
+        <text x="740" y="163" text-anchor="middle" font-size="12" font-weight="700" fill="#0b2545">Claude vision</text>
+        <text x="740" y="180" text-anchor="middle" font-size="9.5" fill="#5b6b7b">tolerant schema · cached</text>
+        <line x1="160" y1="196" x2="160" y2="230" stroke="#168aad" stroke-width="1.5" marker-end="url(#arD)"/>
+        <line x1="450" y1="196" x2="450" y2="230" stroke="#168aad" stroke-width="1.5" marker-end="url(#arD)"/>
+        <line x1="740" y1="196" x2="740" y2="230" stroke="#168aad" stroke-width="1.5" marker-end="url(#arD)"/>
+        <!-- BAND 3: STORAGE -->
+        <text x="45" y="222" font-size="12" font-weight="700" fill="#13315c">3 · STORAGE — one SQLite file</text>
+        <rect x="45" y="232" width="810" height="120" rx="12" fill="#eef6fb" stroke="#168aad" stroke-width="1.5" stroke-dasharray="5 4"/>
+        <text x="450" y="251" text-anchor="middle" font-size="11" font-weight="700" fill="#13606e">procurement.db</text>
+        <rect x="60" y="262" width="180" height="78" rx="8" fill="#ffffff" stroke="#168aad" stroke-width="1.3"/>
+        <text x="150" y="297" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0b2545">Relational tables</text>
+        <text x="150" y="314" text-anchor="middle" font-size="9.5" fill="#5b6b7b">order_id graph</text>
+        <rect x="260" y="262" width="180" height="78" rx="8" fill="#ffffff" stroke="#168aad" stroke-width="1.3"/>
+        <text x="350" y="297" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0b2545">documents</text>
+        <text x="350" y="314" text-anchor="middle" font-size="9.5" fill="#5b6b7b">lineage</text>
+        <rect x="460" y="262" width="180" height="78" rx="8" fill="#ffffff" stroke="#168aad" stroke-width="1.3"/>
+        <text x="550" y="297" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0b2545">FTS5</text>
+        <text x="550" y="314" text-anchor="middle" font-size="9.5" fill="#5b6b7b">keyword · BM25</text>
+        <rect x="660" y="262" width="180" height="78" rx="8" fill="#ffffff" stroke="#168aad" stroke-width="1.3"/>
+        <text x="750" y="297" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0b2545">sqlite-vec</text>
+        <text x="750" y="314" text-anchor="middle" font-size="9.5" fill="#5b6b7b">vectors 384-d</text>
+        <line x1="450" y1="352" x2="450" y2="386" stroke="#168aad" stroke-width="1.5" marker-end="url(#arD)"/>
+        <!-- BAND 4: MCP -->
+        <text x="45" y="378" font-size="12" font-weight="700" fill="#13315c">4 · MCP SERVER — FastMCP · stdio</text>
+        <rect x="45" y="388" width="810" height="86" rx="12" fill="#f3f8fb" stroke="#13606e" stroke-width="1.5"/>
+        <rect x="60" y="404" width="120" height="38" rx="7" fill="#e6f4f1" stroke="#13606e" stroke-width="1.2"/>
+        <text x="120" y="427" text-anchor="middle" font-size="10" font-weight="700" fill="#13606e">search</text>
+        <rect x="192" y="404" width="120" height="38" rx="7" fill="#e6f4f1" stroke="#13606e" stroke-width="1.2"/>
+        <text x="252" y="427" text-anchor="middle" font-size="10" font-weight="700" fill="#13606e">get_document</text>
+        <rect x="324" y="404" width="120" height="38" rx="7" fill="#e6f4f1" stroke="#13606e" stroke-width="1.2"/>
+        <text x="384" y="427" text-anchor="middle" font-size="9.5" font-weight="700" fill="#13606e">order_dossier</text>
+        <rect x="456" y="404" width="120" height="38" rx="7" fill="#d7efe9" stroke="#13606e" stroke-width="1.6"/>
+        <text x="516" y="427" text-anchor="middle" font-size="10" font-weight="700" fill="#0b2545">reconcile</text>
+        <rect x="588" y="404" width="120" height="38" rx="7" fill="#e6f4f1" stroke="#13606e" stroke-width="1.2"/>
+        <text x="648" y="427" text-anchor="middle" font-size="9.5" font-weight="700" fill="#13606e">search_contract</text>
+        <rect x="720" y="404" width="120" height="38" rx="7" fill="#e6f4f1" stroke="#13606e" stroke-width="1.2"/>
+        <text x="780" y="427" text-anchor="middle" font-size="9.5" font-weight="700" fill="#13606e">list_inventory</text>
+        <text x="450" y="463" text-anchor="middle" font-size="9.5" fill="#5b6b7b">every result carries a SourceRef (doc · category · path · page)</text>
+        <line x1="235" y1="474" x2="235" y2="508" stroke="#168aad" stroke-width="1.5" marker-end="url(#arD)"/>
+        <text x="248" y="495" font-size="9" fill="#5b6b7b">JSON-RPC (stdio)</text>
+        <!-- BAND 5: CLIENT -->
+        <text x="45" y="500" font-size="12" font-weight="700" fill="#13315c">5 · CLIENT = AGENT</text>
+        <rect x="45" y="510" width="380" height="66" rx="9" fill="#eef1f6" stroke="#0b2545" stroke-width="1.5"/>
+        <text x="235" y="538" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0b2545">Claude Desktop / ChatGPT</text>
+        <text x="235" y="556" text-anchor="middle" font-size="9.5" fill="#5b6b7b">the LLM plans and routes between tools</text>
+        <rect x="475" y="510" width="380" height="66" rx="9" fill="#f0fdf4" stroke="#15803d" stroke-width="1.5"/>
+        <text x="665" y="538" text-anchor="middle" font-size="12.5" font-weight="700" fill="#14532d">Grounded answer</text>
+        <text x="665" y="556" text-anchor="middle" font-size="9.5" fill="#5b6b7b">citations trace to file + page</text>
+        <line x1="425" y1="543" x2="475" y2="543" stroke="#15803d" stroke-width="1.5" marker-end="url(#arD)"/>
+      </svg>
+      <div class="cap">Sources → one extractor per shape → a single SQLite database → six MCP tools → the client routes and answers with citations. The image invoices (amber) stay on their own path and never join the order graph.</div>
+    </div>
+    <p class="note"><b>Key technologies:</b> Python (managed with <code>uv</code>) · SQLite + <code>sqlite-vec</code> · FTS5 · <code>fastembed</code> (bge-small-en-v1.5, 384-d) · <code>pdfplumber</code> · PyMuPDF · Anthropic vision · the official MCP SDK (FastMCP). Eight direct dependencies, no GPU, no torch, no external services — detailed in §13.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">3</span>How an AI agent uses it (interaction flow)</h2>
+    <p>This is the part that makes it an <i>agentic</i> system rather than a search box. The orchestration is not hard-coded; the MCP client is the agent, and it decides what to call.</p>
+    <ol>
+      <li>The user asks a natural-language question in the client (e.g. Claude Desktop).</li>
+      <li>The client reads the tool descriptions and <b>typed schemas</b> the server advertises, and picks the tool whose contract matches the question. For "missing a PO" it picks <code>reconcile</code>; for the contract it picks <code>search_contract</code>.</li>
+      <li>It calls the tool over stdio (JSON-RPC). The server runs a read-only query and returns <code>structuredContent</code> — a validated object, not prose — including <code>SourceRef</code>s.</li>
+      <li>The client may chain tools (e.g. <code>get_order_dossier</code> → <code>get_document</code>), then composes the final answer and cites the sources.</li>
+    </ol>
+    <p>The server therefore stays a deterministic capability layer. There is no second agent loop inside it — that would be redundant behind the one already calling it. The design lever is the <b>tool surface</b>: name and type the tools well, and the right one becomes the obvious choice for the model.</p>
+  </section>
+
+  <!-- ============================ PART II ============================ -->
+  <div class="part"><span>Part II</span>The data</div>
+
+  <section>
+    <h2><span class="n">4</span>The data: three shapes</h2>
+    <p>Before any code, the files sort into three shapes, and the whole architecture follows from that reading:</p>
+    <table>
+      <tr><th>Shape</th><th>Files</th><th>Nature</th><th>Consequence</th></tr>
+      <tr><td><b>Transactional records</b></td><td>invoices, POs, shipping orders, inventory reports (Northwind PDFs)</td><td>structured / semi-structured, consistent templates, all keyed by <code>order_id</code></td><td>parse deterministically → relational tables → SQL</td></tr>
+      <tr><td><b>One narrative document</b></td><td>the 71-page supply contract (digital PDF)</td><td>unstructured legal prose</td><td>chunk + embed → the only thing in the vector index</td></tr>
+      <tr><td><b>Scanned image invoices</b></td><td>5 JPGs (two visibly different layouts)</td><td>multi-modal, heterogeneous, a different vendor schema entirely</td><td>vision-LLM extraction → a separate, tolerant schema</td></tr>
+    </table>
+    <p>Two findings inside the data shaped specific decisions, covered later: the image invoices are not even one schema among themselves (§7), and the contract is a blank <i>template</i> whose highlight colors carry meaning (§6, §8).</p>
+  </section>
+
+  <section>
+    <h2><span class="n">5</span>Data flow (the pipeline)</h2>
+    <p>One re-runnable pipeline (<code>python -m procurement_kb.pipeline.run</code>) walks <code>data/</code> and builds <code>procurement.db</code> in five steps:</p>
+    <ol>
+      <li><b>Register</b> — every file is recorded in <code>documents</code> (SHA-256, category, file type, page count) so every later record has lineage back to a source file.</li>
+      <li><b>Route by shape</b> — clean Northwind PDFs to deterministic parsers; the 5 image invoices to the vision model; the contract to PyMuPDF.</li>
+      <li><b>Extract</b> — structured fields and line items for the records; text + highlight-color metadata for the contract; a tolerant structured object for each image invoice.</li>
+      <li><b>Index</b> — records into relational tables and a keyword index (<code>doc_fts</code>, BM25); contract chunks into <code>contract_fts</code> (BM25) + <code>contract_vec</code> (384-d vectors).</li>
+      <li><b>Serve</b> — the MCP server then runs read-only queries behind six tools. The MCP layer consumes <i>processed</i> data; it never extracts at request time.</li>
+    </ol>
+    <p class="note"><b>Reproducible &amp; re-runnable.</b> The database is dropped and rebuilt each run (child tables before parents, so foreign-key checks pass on a re-run over a populated DB), so row counts are stable and there is no partial-state drift (idempotent). Only the non-deterministic vision step is cached — by content hash of the image bytes — so the deterministic parsers always run fresh and can never go stale, while the whole pipeline still runs <b>offline with no API key</b> (the 5 extractions ship pre-computed in <code>cache/</code>). Because the cache key is the image's content hash, a re-run re-extracts <b>only</b> images that are new or changed (one Claude-vision call each); unchanged images come from <code>cache/</code> with no API call. Dependencies are pinned with <code>uv.lock</code>. The vision extraction is forced through a structured tool call, so its output always conforms to the schema and can be safely cached.</p>
+    <p class="note"><b>Seeing a data change in the client.</b> The MCP server reads only <code>procurement.db</code> — never <code>data/</code> or <code>cache/</code> directly. So after you add, change, or remove a file in <code>data/</code>, <b>re-run the pipeline</b> to rebuild <code>procurement.db</code>; the client then reflects it on its <b>next</b> tool call automatically — no Claude Desktop restart needed. (Editing <code>cache/</code> alone changes nothing the client sees; the cache is only an input to the pipeline.) Restart Claude Desktop <b>only</b> when you change the server code or the config, which it reads at startup.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">6</span>Data modeling choices</h2>
+    <p><code>order_id</code> is the foreign key of the transactional graph: <code>invoices</code>, <code>purchase_orders</code> and <code>shipping_orders</code> all join on it; <code>inventory_reports</code> join on period and category, not on an order. Each of the three order tables has its own 1—N line-item child table. A <code>documents</code> table is the lineage registry, so every record maps back to a source file and page.</p>
+    <p>The five image invoices are modeled as a <b>separate schema</b> (<code>image_invoices</code>): they carry no <code>order_id</code> and are never joined to the order graph, because they genuinely are not related — different vendors, different layouts, a VAT/IBAN invoice format that has nothing to do with the Northwind orders. Forcing them into the order graph would manufacture false matches; keeping them as their own island is the honest model. The contract is stored as <code>contract_chunks</code> with a <code>highlight</code> column derived from its template colors (§8).</p>
+    <div class="diagram">
+      <div class="mermaid">
+erDiagram
+    documents ||--o| invoices : doc_id
+    documents ||--o| purchase_orders : doc_id
+    documents ||--o| shipping_orders : doc_id
+    documents ||--o| inventory_reports : doc_id
+    documents ||--o| image_invoices : doc_id
+    documents ||--o{ contract_chunks : doc_id
+    invoices ||--o{ invoice_items : order_id
+    purchase_orders ||--o{ po_items : order_id
+    shipping_orders ||--o{ shipping_items : order_id
+    inventory_reports ||--o{ inventory_lines : doc_id
+    image_invoices ||--o{ image_invoice_items : doc_id
+    invoices |o..o| purchase_orders : "same order_id"
+    invoices |o..o| shipping_orders : "same order_id"
+
+    documents {
+        text doc_id PK
+        text category
+        text source_path
+        text sha256
+        int page_count
+    }
+    invoices {
+        int order_id PK
+        text doc_id FK
+        text contact_name
+        text country
+        real total_price
+    }
+    invoice_items {
+        int id PK
+        int order_id FK
+        text product_name
+        real quantity
+        real unit_price
+    }
+    purchase_orders {
+        int order_id PK
+        text doc_id FK
+        text customer_name
+        text order_date
+    }
+    po_items {
+        int id PK
+        int order_id FK
+        text product_name
+        real quantity
+        real unit_price
+    }
+    shipping_orders {
+        int order_id PK
+        text doc_id FK
+        text ship_country
+        text shipped_date
+    }
+    shipping_items {
+        int id PK
+        int order_id FK
+        text product_name
+        real quantity
+        real total
+    }
+    inventory_reports {
+        text doc_id PK
+        text period
+        text category
+        int category_id
+    }
+    inventory_lines {
+        int id PK
+        text doc_id FK
+        text product_name
+        real units_sold
+        real units_in_stock
+    }
+    image_invoices {
+        text doc_id PK
+        text layout_family
+        text invoice_number
+        text seller_name
+        real total
+    }
+    image_invoice_items {
+        int id PK
+        text doc_id FK
+        text description
+        real qty
+        real amount
+    }
+    contract_chunks {
+        int chunk_id PK
+        text doc_id FK
+        text section
+        int page
+        text highlight
+        int indexed
+    }
+      </div>
+      <div class="cap"><b>Entity-relationship view — the real schema from <code>db.py</code>.</b> Everything hangs off <code>documents</code> (lineage). <code>invoices</code>, <code>purchase_orders</code> and <code>shipping_orders</code> share the same <code>order_id</code> (the <code>|o..o|</code> links) — the graph that joins, anti-joins and reconciles. <code>image_invoices</code> and <code>contract_chunks</code> have no <code>order_id</code>: the islands that never join the order graph. <code>||--o{</code> = one-to-many line items.</div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="n">7</span>Structured extraction vs document retrieval</h2>
+    <p>A central decision was <i>per shape</i>: extract structured fields, or retrieve text? The answer is different for each source, and the reasoning is the point.</p>
+    <table>
+      <tr><th>Source</th><th>Approach</th><th>Why</th></tr>
+      <tr><td>Northwind PDFs</td><td><b>structured extraction</b>, deterministic parser</td><td>consistent templates → a small parser is exact, auditable, free, and never hallucinates. An LLM here would add cost and variance for no gain.</td></tr>
+      <tr><td>Image invoices</td><td><b>structured extraction</b>, via a vision LLM</td><td>this is the one place that genuinely needs AI: the layouts vary, so a template parser would break. The LLM absorbs layout variance into a typed schema.</td></tr>
+      <tr><td>Contract</td><td><b>document retrieval</b> (chunk + embed)</td><td>narrative prose with no fixed fields; the question is semantic ("supply terms"), so chunked hybrid search is the right tool.</td></tr>
+    </table>
+    <p>The image invoices are heterogeneous even among themselves — some are formal invoices with a header, IBAN and VAT; others are bare industrial invoices with no header at all, and even differ from each other (one carries a sales tax line, another does not). A rigid template parser would break on that, so they share one <b>tolerant schema</b> (most fields <code>Optional</code>) with a <code>layout_family</code> tag, and the vision model absorbs the variance. The extraction is forced through a structured tool call (so the output always conforms to the schema) and cached by content hash, so it is stable and offline-reproducible.</p>
+  </section>
+
+  <!-- ============================ PART III ============================ -->
+  <div class="part"><span>Part III</span>Retrieval &amp; the MCP surface</div>
+
+  <section>
+    <h2><span class="n">8</span>Retrieval strategy</h2>
+    <p>Most of the example questions are relational, not semantic. Vector similarity returns ranked, approximate neighbours — it cannot prove the absence of a matching row, or guarantee an exact lookup. So those questions are answered with SQL, and <b>only the contract is embedded</b>.</p>
+    <table>
+      <tr><th>Question type</th><th>Operation</th><th>Tool</th></tr>
+      <tr><td>invoices missing a PO</td><td>anti-join / set difference</td><td>SQL (<code>reconcile</code>)</td></tr>
+      <tr><td>which documents support an order</td><td>exact lookup</td><td>SQL (<code>get_order_dossier</code>)</td></tr>
+      <tr><td>mismatches across invoice / PO / shipping</td><td>multi-table join + compare</td><td>SQL (<code>reconcile</code>)</td></tr>
+      <tr><td>evidence about a vendor / item</td><td>keyword + filter</td><td>FTS5 (<code>search</code>)</td></tr>
+      <tr><td>inventory available / period</td><td>metadata query</td><td>SQL (<code>list_inventory_reports</code>)</td></tr>
+      <tr><td>summarize contract supply terms</td><td>semantic</td><td>vector + BM25 (<code>search_contract</code>)</td></tr>
+    </table>
+    <p>For example, "which invoices are missing a purchase order" is a set difference — exact, explainable and auditable, which a similarity score is not:</p>
+    <pre><code>SELECT order_id FROM invoices
+WHERE order_id NOT IN (SELECT order_id FROM purchase_orders);
+<span class="c">-- → 10436, 10687, 10839</span></code></pre>
+    <h3>Contract search is hybrid</h3>
+    <p>Dense vectors (sqlite-vec) and BM25 keyword search (FTS5) run in parallel and are fused with <b>Reciprocal Rank Fusion</b> (k=60). They are complementary: the dense vector captures meaning and paraphrase, while BM25 catches the exact terms a dense vector blurs — clause numbers, defined terms, party names. RRF combines their rankings without needing the two scores to be on the same scale.</p>
+    <h3>The contract's colors are data quality</h3>
+    <p>The contract is a blank template; its highlight colors are a legend it defines itself (yellow = placeholder, green = authoring instruction, grey = optional clause). These are vector rectangles in the PDF, read directly — <b>no OCR, zero tokens</b>. They become a <code>highlight</code> column used as a data-quality signal: the green authoring-instruction block (the document's own "to be deleted before issuing" note) is excluded from the index, and yellow placeholders are flagged, so the agent never returns template boilerplate (for example <code>[NAME OF SUPPLIER]</code>) as if it were a real, executed term. This is the kind of validation an audit platform depends on.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">9</span>The MCP tools, in detail</h2>
+    <p>A small, typed tool set — six tools. Each returns a Pydantic model, so the SDK emits <code>structuredContent</code> with an <code>outputSchema</code> the client can rely on. Each returns <b>ranked hits with snippets rather than raw dumps</b> (so the agent does not drown in unnecessary data), and each carries one or more <code>SourceRef</code>. The client decides which tool to call.</p>
+
+    <div class="tool">
+      <span class="sig">search(query: str, doc_type?: str, limit: int = 5) → SearchResults</span>
+      <h3>Keyword evidence across every record type</h3>
+      <div class="row"><b>How it works:</b> tokenizes the query and runs an FTS5 <code>MATCH</code> over <code>doc_fts</code> (a keyword index spanning all structured records), optionally filtered by <code>doc_type</code> (e.g. only invoices), ordered by BM25 <code>rank</code>, capped at <code>limit</code>.</div>
+      <div class="row"><b>Returns:</b> <code>{ query, count, results[] }</code> where each hit is <code>{ doc_id, category, order_id?, snippet, source }</code> — the <code>snippet</code> is a short bracketed excerpt around the match, not the full document.</div>
+      <div class="row"><b>Answers:</b> "find evidence related to a specific vendor, order, or item."</div>
+    </div>
+
+    <div class="tool">
+      <span class="sig">get_document(doc_id: str) → DocumentOut | None</span>
+      <h3>The full structured record for one document</h3>
+      <div class="row"><b>How it works:</b> looks up the document's category in <code>documents</code>, then routes to the matching table and returns its fields plus the 1—N line items. One tool covers all six categories. For the contract it returns a small note and chunk counts instead of dumping 71 pages, pointing the agent to <code>search_contract</code>.</div>
+      <div class="row"><b>Returns:</b> <code>{ doc_id, category, fields{}, line_items[], source }</code>, or <code>None</code> if the id does not exist.</div>
+      <div class="row"><b>Answers:</b> "show me the full invoice / PO / shipping order / inventory report / image invoice."</div>
+    </div>
+
+    <div class="tool">
+      <span class="sig">get_order_dossier(order_id: int) → OrderDossier</span>
+      <h3>Which documents support a given order</h3>
+      <div class="row"><b>How it works:</b> for the order, checks the presence of an invoice, a purchase order and a shipping order; for each present document returns its <code>doc_id</code>, a small summary (key columns) and a <code>SourceRef</code>; a <code>note</code> states what, if anything, is missing.</div>
+      <div class="row"><b>Returns:</b> <code>{ order_id, invoice, purchase_order, shipping_order, note }</code>, each sub-object being <code>{ present, doc_id?, source?, summary{} }</code>.</div>
+      <div class="row"><b>Answers:</b> "which documents support order 10687?" and "what purchase order supports this invoice?"</div>
+    </div>
+
+    <div class="tool star">
+      <span class="sig">reconcile(order_id?: int) → list[Reconciliation]</span>
+      <h3>Three-way cross-document match (the core reasoning tool)</h3>
+      <div class="row"><b>How it works:</b> for one order — or for every order in the knowledge base when called with no argument — it checks the presence of invoice / PO / shipping, then compares line items <i>across whatever documents exist</i>, keyed by product name: it flags any product whose quantity differs between documents, and any whose unit price differs (compared to two decimals). It returns a status of <code>complete</code>, <code>missing_document</code>, or <code>quantity_or_price_mismatch</code> with human-readable findings.</div>
+      <div class="row"><b>Returns:</b> per order, <code>{ order_id, has_invoice, has_purchase_order, has_shipping_order, status, findings[], line_diffs[], sources[] }</code>.</div>
+      <div class="row"><b>Answers:</b> "are there mismatches between invoices, POs and shipping?", "does this shipment match the related invoice?", and "which invoices are missing a matching purchase order?"</div>
+    </div>
+
+    <div class="tool">
+      <span class="sig">search_contract(query: str, k: int = 5) → list[ContractHit]</span>
+      <h3>Hybrid semantic + keyword search over the contract</h3>
+      <div class="row"><b>How it works:</b> embeds the query with fastembed, runs a KNN search over the contract vectors (with a numpy cosine fallback if sqlite-vec is unavailable) and a BM25 search over <code>contract_fts</code> in parallel, then fuses the two rankings with Reciprocal Rank Fusion (k=60). Returns the top-<code>k</code> chunks with their section heading, page, the <code>highlight</code> tag, and a fused score.</div>
+      <div class="row"><b>Returns:</b> a list of <code>{ chunk_id, section, snippet, highlight, score, source(+page) }</code>; <code>highlight</code> is one of <code>none</code> / <code>placeholder</code> / <code>option</code>.</div>
+      <div class="row"><b>Answers:</b> "summarize the contract terms relevant to supply of goods."</div>
+    </div>
+
+    <div class="tool">
+      <span class="sig">list_inventory_reports() → list[InventoryReportSummary]</span>
+      <h3>What inventory data exists, and the period it covers</h3>
+      <div class="row"><b>How it works:</b> lists the inventory reports with the count of their line items, ordered by period — a pure metadata query, no parameters.</div>
+      <div class="row"><b>Returns:</b> a list of <code>{ doc_id, period, category, category_id?, product_count, source }</code>.</div>
+      <div class="row"><b>Answers:</b> "what inventory reports are available, and what period do they cover?"</div>
+    </div>
+
+    <p>Example — <code>reconcile(order_id=10687)</code> returns typed, cited output:</p>
+    <pre><code>{ "order_id": 10687,
+  "has_invoice": true, "has_purchase_order": false, "has_shipping_order": true,
+  "status": "missing_document",
+  "findings": ["No purchase order found for order 10687."],
+  "sources": [
+    { "doc_id": "invoice_10687", "category": "invoice",
+      "source_path": "data/invoices/invoice_10687.pdf" },
+    { "doc_id": "order_10687", "category": "shipping_order",
+      "source_path": "data/shipping_orders/order_10687.pdf" } ] }</code></pre>
+    <p class="note">No agent framework runs inside the server. In MCP the client is the agent; embedding a second agent loop in the server would be redundant.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">10</span>Citation / source-reference strategy</h2>
+    <p>Grounding is structural, not bolted on. Every tool result carries a <code>SourceRef { doc_id, category, source_path, page }</code>; contract hits also include the section heading and page. Behind them, the <code>documents</code> table maps every record back to its original file (with its SHA-256). So each claim in an answer traces to a specific document and, for the contract, a specific page.</p>
+  </section>
+
+  <!-- ============================ PART IV ============================ -->
+  <div class="part"><span>Part IV</span>The repository</div>
+
+  <section>
+    <h2><span class="n">11</span>Repository layout</h2>
+    <p>The code is organised so the pipeline, the query logic, and the MCP wiring are separable — the query logic is deliberately split from the transport so it can be unit-tested and driven by the smoke test without a server.</p>
+    <pre><code>procurement_kb/
+  config.py              paths + model settings
+  models.py              Pydantic schemas (extraction records + typed tool I/O)
+  db.py                  SQLite schema, sqlite-vec loading (+ numpy fallback)
+  pipeline/
+    run.py               orchestrator  → procurement.db
+    cache.py             content-hash extraction cache (vision step only)
+    extract_pdf.py       deterministic Northwind parsers
+    extract_image.py     Claude-vision structured extraction (cached)
+    extract_contract.py  PyMuPDF text + highlight-color metadata (no OCR)
+    embed.py             fastembed bge-small (graceful fallback)
+  server/
+    queries.py           query logic (typed, testable, transport-free)
+    mcp_server.py        FastMCP tool definitions
+scripts/
+  seed_image_cache.py    restores the 5 pre-extracted invoices (offline)
+  smoke_test.py          the 8 example questions → grounded answers
+  mcp_client_test.py     a real MCP protocol round-trip over stdio
+data/                    the provided documents (self-contained)
+cache/                   5 pre-extracted image invoices (committed → offline)
+docs/                    this overview (.html / .md) · config example · EVIDENCE.txt</code></pre>
+  </section>
+
+  <section>
+    <h2><span class="n">12</span>Tech stack: dependencies and why each was chosen</h2>
+    <p>Eight direct dependencies, all local. The bar for each was "the lightest tool that is actually reliable for this shape of data" — no GPU, no torch, no running services, no cloud.</p>
+    <table>
+      <tr><th>Library</th><th>Role here</th><th>Considered instead</th><th>Why this one</th></tr>
+      <tr>
+        <td><code>mcp[cli]</code><br><span class="note">FastMCP</span></td>
+        <td>the MCP protocol — server, stdio transport, typed tools</td>
+        <td>a hand-rolled JSON-RPC server; a heavier agent framework</td>
+        <td>official SDK; typed decorators auto-emit <code>structuredContent</code> + <code>outputSchema</code>; ships the Inspector/CLI for testing</td>
+      </tr>
+      <tr>
+        <td><code>pdfplumber</code></td>
+        <td>deterministic parsing of the Northwind PDFs (text + tables)</td>
+        <td><code>pypdf</code> (text only, weak on tables); camelot / tabula (heavier; tabula needs Java); <code>unstructured</code> (heavy)</td>
+        <td>pure-Python, reliable positional text and table extraction, light footprint</td>
+      </tr>
+      <tr>
+        <td><code>pymupdf</code><br><span class="note">(fitz)</span></td>
+        <td>contract text + highlight colors as vector rectangles, no OCR</td>
+        <td>pdfminer / pdfplumber (awkward for fill colors); Tesseract / Textract OCR (unnecessary — the PDF is digital)</td>
+        <td>fast, and exposes the vector draw layer so the colors are read with zero OCR and zero tokens (note: AGPL — fine for a local tool)</td>
+      </tr>
+      <tr>
+        <td><code>fastembed</code></td>
+        <td>local embeddings — bge-small-en-v1.5, 384-d, ONNX</td>
+        <td>sentence-transformers (pulls in torch, ~GBs); OpenAI / Cohere embeddings (API key + network)</td>
+        <td>ONNX runtime — no torch, no GPU, no key; compact 384-d vectors; runs fully offline</td>
+      </tr>
+      <tr>
+        <td><code>sqlite-vec</code></td>
+        <td>vector KNN inside the same SQLite file</td>
+        <td>FAISS (separate index); Chroma / Qdrant / Weaviate (a running service); pgvector (needs Postgres)</td>
+        <td>lives inside the one database file, zero services; ample for a few hundred chunks; numpy cosine fallback included</td>
+      </tr>
+      <tr>
+        <td><code>anthropic</code></td>
+        <td>Claude vision structured extraction for the 5 image invoices</td>
+        <td>Tesseract OCR (brittle on heterogeneous layouts); AWS Textract (cloud); docling + TableFormer (local but pulls torch)</td>
+        <td>absorbs layout variance into a typed schema; forced structured tool call; the result is cached so the pipeline stays offline</td>
+      </tr>
+      <tr>
+        <td><code>pydantic</code></td>
+        <td>typed extraction records + typed tool I/O</td>
+        <td>dataclasses (no validation); attrs; marshmallow</td>
+        <td>the MCP SDK uses it to emit <code>structuredContent</code> + <code>outputSchema</code>; validates extraction at the boundary</td>
+      </tr>
+      <tr>
+        <td><code>numpy</code></td>
+        <td>cosine-similarity fallback when sqlite-vec can't load</td>
+        <td>pure-Python math (slow)</td>
+        <td>already transitive; keeps vector search working everywhere with no extra weight</td>
+      </tr>
+    </table>
+    <p class="note"><b>Standard library does the rest:</b> <code>sqlite3</code> (storage + FTS5 keyword index), <code>hashlib</code> (SHA-256 for lineage and the cache key), <code>logging</code> — routed entirely to <b>stderr</b>, never stdout, because stdout is the MCP JSON-RPC channel and a stray <code>print</code> would corrupt it — plus <code>re</code>, <code>pathlib</code> and <code>json</code>. Managed with <code>uv</code>; versions pinned in <code>uv.lock</code>.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">13</span>What I deliberately did NOT build (and the trigger to add it)</h2>
+    <p>The brief asks not to overengineer. At 45 documents, each of the following would add weight without improving results — but each has a clear trigger that would make it worth adding later. Naming them is part of the design.</p>
+    <table>
+      <tr><th>Deliberately not built</th><th>Why, at this scale</th><th>Trigger to add it</th></tr>
+      <tr><td>dedicated vector database</td><td>a few hundred chunks → one SQLite file is enough</td><td>millions of vectors / multi-tenant</td></tr>
+      <tr><td>ANN index (HNSW) / reranker</td><td>brute-force KNN is instant; too few candidates to rerank</td><td>recall plateaus on a large candidate set</td></tr>
+      <tr><td>GraphRAG</td><td>a clean <code>order_id</code> foreign key already <i>is</i> the graph</td><td>multi-hop reasoning over keyless entities</td></tr>
+      <tr><td>agent framework in the server</td><td>the MCP client is the agent</td><td>when I own the agent loop (a long-horizon app)</td></tr>
+      <tr><td>eval harness in-core (LangSmith / RAGAS)</td><td>the prototype is deterministic and auditable by hand</td><td>productionization — golden datasets, citation faithfulness</td></tr>
+      <tr><td>cloud / Docker / IaC</td><td>brief says local and lightweight; <code>uv.lock</code> already gives reproducibility</td><td>a real deployment</td></tr>
+    </table>
+  </section>
+
+  <section>
+    <h2><span class="n">14</span>Install, run &amp; connect to Claude Desktop</h2>
+    <p>Everything needed to go from a clone to live tool calls in Claude Desktop, in one place — you should not need any other file to install this. <b>Prerequisites:</b> <code>uv</code> and Python ≥ 3.11. No API key is needed — the 5 image extractions ship pre-computed in <code>cache/</code>, so everything runs offline.</p>
+
+    <h3>Step 1 — install dependencies and build the database</h3>
+    <pre><code><span class="c"># create the venv + install locked dependencies</span>
+uv sync
+
+<span class="c"># build the knowledge base → procurement.db (re-runnable, idempotent)</span>
+uv run python -m procurement_kb.pipeline.run</code></pre>
+
+    <h3>Step 1b — (optional) an Anthropic API key, for new / changed images</h3>
+    <p>The default build needs no key (the 5 image extractions ship in <code>cache/</code>). The key is consulted <b>only on a cache miss</b> — a new image, a changed image, or an empty <code>cache/</code> — because the vision extraction is cached by the image's content hash. Provide it any of three ways (first match wins): a <code>.env</code> file at the repo root (auto-loaded, git-ignored), a shell <code>export</code>, or inline. <code>PKB_VISION_MODEL</code> (default <code>claude-opus-4-8</code>) overrides the vision model.</p>
+    <pre><code><span class="c"># (a) .env at the repo root  ← recommended; auto-loaded, git-ignored</span>
+cp .env.example .env          <span class="c"># then set ANTHROPIC_API_KEY=sk-ant-...</span>
+<span class="c"># (b) export ANTHROPIC_API_KEY=sk-ant-...</span>
+<span class="c"># (c) ANTHROPIC_API_KEY=sk-ant-... uv run python -m procurement_kb.pipeline.run</span></code></pre>
+    <p>Because the pipeline rebuilds from <code>data/</code> every run and caches by content hash, you can demonstrate the full extraction flow without writing any code: clear <code>cache/</code> (then run) to re-extract all 5 live; add or edit a JPG in <code>data/invoices/</code> and re-run, and <b>only</b> the new / changed image calls the API while the rest load from cache; remove a JPG and it simply drops out of the next build.</p>
+    <pre><code><span class="c"># full live extraction of all 5 (no cache):</span>
+mv cache cache.bak &amp;&amp; uv run python -m procurement_kb.pipeline.run   <span class="c"># 5 vision calls</span>
+rm -rf cache &amp;&amp; git checkout -- cache                              <span class="c"># restore committed cache</span>
+
+<span class="c"># add / change an image, then re-run — only that file calls the API:</span>
+cp my_invoice.jpg data/invoices/ &amp;&amp; uv run python -m procurement_kb.pipeline.run</code></pre>
+
+    <h3>Step 2 — (optional) verify before wiring up a client</h3>
+    <pre><code><span class="c"># 8 example questions → grounded answers, offline, no GUI</span>
+uv run python scripts/smoke_test.py
+
+<span class="c"># a real MCP protocol round-trip over stdio</span>
+uv run python scripts/mcp_client_test.py
+
+<span class="c"># or inspect the tools visually in a browser, no install</span>
+npx @modelcontextprotocol/inspector uv run python -m procurement_kb.server.mcp_server</code></pre>
+
+    <h3>Step 3 — register the server in Claude Desktop</h3>
+    <p>You don't run the server yourself — Claude Desktop launches it over stdio once it's registered.</p>
+    <ol>
+      <li><b>Open the config file</b> (create it if it doesn't exist) — Claude Desktop → <b>Settings → Developer → Edit Config</b>, or open it directly:
+        <ul>
+          <li>macOS: <code>~/Library/Application Support/Claude/claude_desktop_config.json</code></li>
+          <li>Windows: <code>%APPDATA%\Claude\claude_desktop_config.json</code></li>
+        </ul>
+      </li>
+      <li><b>Add the <code>procurement-kb</code> block</b> inside <code>mcpServers</code>, replacing <code>ABSOLUTE_PATH</code> with the full path to this repo. If you already have other MCP servers, add it alongside them inside the same <code>mcpServers</code> object:
+        <pre><code>{
+  "mcpServers": {
+    "procurement-kb": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "ABSOLUTE_PATH/caseware-procurement-mcp",
+        "run",
+        "python",
+        "-m",
+        "procurement_kb.server.mcp_server"
+      ]
+    }
+  }
+}</code></pre>
+      </li>
+      <li><b>If Claude Desktop can't find <code>uv</code></b> — the server shows as failed, or the log says <code>spawn uv ENOENT</code> — Claude Desktop does <b>not</b> inherit your shell <code>PATH</code>, so a bare <code>"command": "uv"</code> fails when <code>uv</code> isn't on a standard system path. Run <code>which uv</code> (macOS/Linux) or <code>where uv</code> (Windows) and use that absolute path as <code>"command"</code>, e.g. <code>"command": "/Users/you/.local/bin/uv"</code>.</li>
+      <li><b>Fully quit and reopen</b> Claude Desktop (⌘Q on macOS — the config is read only at startup).</li>
+    </ol>
+
+    <h3>Step 4 — confirm it's connected</h3>
+    <p>The server appears under <b>Settings → Developer</b> and the six tools show in the tools (🔌) menu. Ask an example question — <i>"Which invoices are missing a purchase order?"</i> — and Claude calls the tools and answers with sources.</p>
+    <p class="note"><b>Troubleshooting:</b> if the server doesn't appear, the log says why — <code>~/Library/Logs/Claude/mcp-server-procurement-kb.log</code> (macOS). The usual cause is the <code>uv</code> path (step 3) or a wrong <code>ABSOLUTE_PATH</code>. The same <code>procurement-kb</code> block also works in any other MCP client — the server speaks plain MCP over stdio.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">15</span>Evidence it works with an MCP client</h2>
+    <ul>
+      <li><code>scripts/mcp_client_test.py</code> — spawns the server over stdio with the official MCP client, lists the six tools and calls them, returning <code>structuredContent</code> (a real protocol round-trip, not a direct function call).</li>
+      <li><code>scripts/smoke_test.py</code> — answers the eight example questions with grounded sources (offline, no GUI).</li>
+      <li><code>EVIDENCE.txt</code> — captured output of both runs.</li>
+      <li>Claude Desktop — registered live; full install steps are in §14 (self-contained).</li>
+    </ul>
+    <p class="note"><b>Verified results:</b> 45 documents ingested (1 contract · 5 image invoices · 7 inventory reports · 8 invoices · 8 purchase orders · 16 shipping orders); the contract split into 210 chunks (209 indexed, 1 template-instruction block excluded); invoices with no matching purchase order = 10436, 10687, 10839; order 10687 = invoice + shipping, no PO. All six tools return structured output with source references over the MCP protocol.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">16</span>AI-assisted development &amp; validation</h2>
+    <p>Built with AI assistance (Claude Code) for scaffolding, the deterministic parsers, and the MCP wiring — the brief requires using AI-assisted tooling. The architecture and trade-offs are my own. Validation was layered: extraction was cross-checked against the raw PDF text and the source images; <code>smoke_test.py</code> and <code>mcp_client_test.py</code> verify the answers, the sources, and the MCP round-trip; the image extraction is constrained to the schema via a forced structured tool call and cached; and every SQL query behind a tool is auditable by hand. Where a result depends on the model (the 5 image invoices), it is the only AI-extracted data and is isolated behind its own cached, validated schema.</p>
+  </section>
+
+  <section>
+    <h2><span class="n">17</span>Scaling path (production, AWS)</h2>
+    <p>The same shape maps onto managed services without changing the design: <b>S3</b> for ingestion, <b>Textract</b> (<code>AnalyzeExpense</code>) or <b>Bedrock Data Automation</b> for extraction, <b>Step Functions / Lambda</b> for orchestration, <b>Aurora + pgvector</b> / <b>OpenSearch Serverless</b> / <b>S3 Vectors</b> for storage, <b>Bedrock Knowledge Bases</b> for retrieval with citations, <b>Claude on Bedrock</b> for reasoning, and the MCP server hosted on <b>Bedrock AgentCore</b> (Runtime, or tools via Gateway). Governance for an audit customer comes from <b>CloudTrail</b> (audit trail), <b>DataZone</b> (lineage), and <b>Bedrock Guardrails</b> — with Bedrock not training on customer data. The local prototype already mirrors the structure: lineage table, deterministic extraction, citations, and a typed tool boundary.</p>
+  </section>
+
+  <footer><b>Miguel Ángel Santana Hernández</b> · Procurement Knowledge Base — Technical Overview · June 2026<br>
+  github.com/COLMASH · companion to the README and source repository</footer>
+
+</div>
+<script type="module">
+  import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+  mermaid.initialize({ startOnLoad: true, theme: 'neutral', securityLevel: 'loose', er: { useMaxWidth: true } });
+</script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+{
+  "layout_family": "formal_eu",
+  "invoice_number": "23285582",
+  "issue_date": "12/19/2015",
+  "seller_name": "Harris-Green",
+  "seller_tax_id": "935-80-2834",
+  "seller_iban": "GB11QYTR88328261828600",
+  "client_name": "Good PLC",
+  "client_tax_id": "993-98-0454",
+  "currency": "USD",
+  "subtotal": 34624.3,
+  "tax_amount": 3462.43,
+  "shipping": null,
+  "total": 38086.73,
+  "line_items": [
+    {
+      "description": "16 Inches Marble Coffee Table Top Inlay with Multi Stone at Border Game Table",
+      "qty": 4.0,
+      "unit_price": 280.5,
+      "amount": 1234.2
+    },
+    {
+      "description": "6'x3' Black Marble Large Dining Table Top Very Fine Handmade Marquetry Birds Art",
+      "qty": 5.0,
+      "unit_price": 5303.66,
+      "amount": 29170.13
+    },
+    {
+      "description": "Luxurious Pattern Stone Dinning Table Top Marble Conference Table Size 48 Inches",
+      "qty": 2.0,
+      "unit_price": 3492.0,
+      "amount": 7682.4
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "//": "Add the 'procurement-kb' block below to Claude Desktop > Settings > Developer > Edit Config.",
+  "//-path-macos": "~/Library/Application Support/Claude/claude_desktop_config.json",
+  "//-path-windows": "%APPDATA%\\Claude\\claude_desktop_config.json",
+  "//-step-1": "Replace ABSOLUTE_PATH below with the full path to this repo.",
+  "//-step-2": "If the server fails with 'spawn uv ENOENT', Claude Desktop can't find uv on its PATH. Replace \"uv\" in \"command\" with uv's absolute path (run: which uv  /  where uv).",
+  "//-step-3": "Fully quit and reopen Claude Desktop (the config is read only at startup).",
+  "mcpServers": {
+    "procurement-kb": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "ABSOLUTE_PATH/caseware-procurement-mcp",
+        "run",
+        "python",
+        "-m",
+        "procurement_kb.server.mcp_server"
+      ]
+    }
+  }
+}

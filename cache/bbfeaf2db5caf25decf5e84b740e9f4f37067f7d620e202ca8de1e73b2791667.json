@@ -1,0 +1,47 @@
+{
+  "layout_family": "formal_eu",
+  "invoice_number": "77833987",
+  "issue_date": "05/20/2013",
+  "seller_name": "Freeman and Sons",
+  "seller_tax_id": "973-76-8676",
+  "seller_iban": "GB43RCPI15397639476218",
+  "client_name": "Houston Group",
+  "client_tax_id": "901-88-1175",
+  "currency": "USD",
+  "subtotal": 117.75,
+  "tax_amount": 11.78,
+  "shipping": null,
+  "total": 129.53,
+  "line_items": [
+    {
+      "description": "Introduction to Thematic Cartography",
+      "qty": 1.0,
+      "unit_price": 8.99,
+      "amount": 9.89
+    },
+    {
+      "description": "Sonic Wind The Story of John Paul Stapp and How a Renegade Doctor Be",
+      "qty": 1.0,
+      "unit_price": 4.49,
+      "amount": 4.94
+    },
+    {
+      "description": "Entertaining",
+      "qty": 1.0,
+      "unit_price": 4.49,
+      "amount": 4.94
+    },
+    {
+      "description": "Rebecca to the Rescue (American Girl (Quality))",
+      "qty": 2.0,
+      "unit_price": 4.89,
+      "amount": 10.76
+    },
+    {
+      "description": "Gulag archipelago / Gulag Archipelago Volume 2 / 1st edition paperbacks",
+      "qty": 3.0,
+      "unit_price": 30.0,
+      "amount": 99.0
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+
+# Generated artifacts (re-created by the pipeline)
+procurement.db
+# downloaded embedding model (~64MB)
+.models/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
+# Secrets
+.env
+
+# NOTE: cache/ IS committed on purpose — it holds the pre-extracted image
+# invoices so the pipeline runs fully offline with no ANTHROPIC_API_KEY.

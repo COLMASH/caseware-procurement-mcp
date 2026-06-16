@@ -1,0 +1,41 @@
+{
+  "layout_family": "industrial",
+  "invoice_number": null,
+  "issue_date": null,
+  "seller_name": null,
+  "seller_tax_id": null,
+  "seller_iban": null,
+  "client_name": null,
+  "client_tax_id": null,
+  "currency": "USD",
+  "subtotal": 1289.0,
+  "tax_amount": null,
+  "shipping": 50.0,
+  "total": 1339.0,
+  "line_items": [
+    {
+      "description": "3M 49 Fastbond Insulation Adh. 5 Gal 1 x 5gal/pail",
+      "qty": 1.0,
+      "unit_price": 119.0,
+      "amount": 119.0
+    },
+    {
+      "description": "Activator CREAM 5-gal 5 gallons/pailt",
+      "qty": 2.0,
+      "unit_price": 130.0,
+      "amount": 260.0
+    },
+    {
+      "description": "AEB2461 PTFE 10\"x36YDS 5mil Glass Cloth Fabric / No Adh.",
+      "qty": 4.0,
+      "unit_price": 174.0,
+      "amount": 696.0
+    },
+    {
+      "description": "Permabond 106 Cyanoacrylate 1-oz 10 bottles/case",
+      "qty": 2.0,
+      "unit_price": 107.0,
+      "amount": 214.0
+    }
+  ]
+}

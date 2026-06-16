@@ -1,0 +1,41 @@
+{
+  "layout_family": "industrial",
+  "invoice_number": null,
+  "issue_date": null,
+  "seller_name": null,
+  "seller_tax_id": null,
+  "seller_iban": null,
+  "client_name": null,
+  "client_tax_id": null,
+  "currency": "USD",
+  "subtotal": 1175.0,
+  "tax_amount": 93.7,
+  "shipping": 50.0,
+  "total": 1317.7,
+  "line_items": [
+    {
+      "description": "3M 205 Painters Tape 48mm x 55m GREEN 24 rolls/case | 1,152 rolls/skid",
+      "qty": 2.0,
+      "unit_price": 266.0,
+      "amount": 266.0
+    },
+    {
+      "description": "3M R3187 Repulp.BLUE 96mm x55m 8 rolls/case",
+      "qty": 5.0,
+      "unit_price": 61.0,
+      "amount": 61.0
+    },
+    {
+      "description": "3M 3792LM TCQ Jet Melt 8\"x 11lbs. 5/8\" CLEAR | 11 pounds/case",
+      "qty": 7.0,
+      "unit_price": 136.0,
+      "amount": 136.0
+    },
+    {
+      "description": "3M BBI-4A-50' HeatShrink Tube 5.43\"-8.86\"OD",
+      "qty": 1.0,
+      "unit_price": 716.0,
+      "amount": 716.0
+    }
+  ]
+}

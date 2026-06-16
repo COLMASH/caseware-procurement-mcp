@@ -1,0 +1,41 @@
+{
+  "layout_family": "industrial",
+  "invoice_number": "118",
+  "issue_date": "March 9, 2022",
+  "seller_name": "BLUE STREAK ELECTRONICS",
+  "seller_tax_id": null,
+  "seller_iban": null,
+  "client_name": "GEONICS LTD",
+  "client_tax_id": null,
+  "currency": "USD",
+  "subtotal": 804.0,
+  "tax_amount": 63.47,
+  "shipping": 50.0,
+  "total": 916.47,
+  "line_items": [
+    {
+      "description": "3M Scotchcast Electrical Resin #8 - 16 lbs/kit 16 lbs/case",
+      "qty": 2.0,
+      "unit_price": 346.0,
+      "amount": 346.0
+    },
+    {
+      "description": "3M DP460 EG Epoxy Adhesive - 50ml 2:1 12 kits/case",
+      "qty": 4.0,
+      "unit_price": 226.0,
+      "amount": 226.0
+    },
+    {
+      "description": "Freight AE Blake Montreal to Aerospace Metal",
+      "qty": 6.0,
+      "unit_price": 136.0,
+      "amount": 136.0
+    },
+    {
+      "description": "Lead-time is a mere estimate. Actual delivery may differ without notice",
+      "qty": 8.0,
+      "unit_price": 96.0,
+      "amount": 96.0
+    }
+  ]
+}
